@@ -1,3 +1,9 @@
+import sys
+
+import requests
+
+from downloader import url_request
+from parser import html_parser
 from validators import is_valid_url, normalize_url
 
 
@@ -13,10 +19,31 @@ def main():
     print(20 * "-", "URL VALIDATION", 20 * "-")
 
     if is_valid_url(normalized_url):
-        print("Valid URL")
+        print("URL validation successful.")
 
     else:
-        print("Invalid URL")
+        print("URL validation failed: Invalid URL.")
+        sys.exit(1)
+
+    
+    print()
+    print(20 * "-", "HTTP REQUEST", 20 * "-")
+
+    try:
+        html = url_request(normalized_url)
+        print("HTTP request successful.")
+
+    except requests.exceptions.RequestException as e:
+        print(f"HTTP request failed: {e}")
+        sys.exit(1)
+
+    print()
+    print(20 * "-", "HTML PARSING", 20 * "-")
+
+    parsed_html = html_parser(html)
+    print("HTML parsing successful.")
+
+
 
 if __name__ == "__main__":
     main()
