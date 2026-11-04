@@ -1,22 +1,26 @@
 # Gold & Currency Price Tracker
 
-A Python project that retrieves gold price information from a website by sending HTTP requests, parsing HTML content, and extracting the displayed gold price.
+A Python project that retrieves gold price information using two different methods: extracting the displayed price from website HTML or retrieving gold price data through an external API.
 
 ## Features
 
 - **URL Normalization:** Removes surrounding whitespace and adds `https://` when a URL does not include an HTTP or HTTPS scheme.
 - **URL Validation:** Checks whether a URL uses HTTP or HTTPS and has a basic valid hostname format.
 - **HTTP Requests:** Retrieves webpage content using the `requests` library.
-- **Error Handling:** Handles common HTTP request errors, including connection failures, timeouts, and unsuccessful HTTP status codes.
+- **API Integration:** Retrieves gold price information through the Metals.Dev API.
+- **Environment Variables:** Uses `python-dotenv` to load sensitive configuration, such as API keys, from a `.env` file.
+- **Error Handling:** Handles common HTTP request errors, timeouts, unsuccessful HTTP status codes, invalid JSON responses, and missing JSON keys.
 - **HTML Parsing:** Parses webpage content using BeautifulSoup.
-- **Gold Price Extraction:** Extracts the displayed gold price from the parsed HTML.
-- **Command-Line Interface:** Prompts the user for a website URL and displays the processing status and extracted price.
+- **Gold Price Extraction:** Extracts the displayed gold price from parsed HTML or retrieves the gold price from an API response.
+- **Command-Line Interface:** Allows users to choose between HTML-based extraction and API-based extraction.
 
 ## Technologies
 
 - Python 3.10+
 - [Requests](https://requests.readthedocs.io/)
 - [Beautiful Soup 4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+- [python-dotenv](https://pypi.org/project/python-dotenv/)
+- [Metals.Dev API](https://metals.dev/)
 - Pytest (for testing)
 
 ## Project Structure
@@ -25,20 +29,24 @@ A Python project that retrieves gold price information from a website by sending
 Gold&Currency-Price-Tracker/
 ├── src/
 │   ├── main.py
+│   ├── api.py
 │   ├── validators.py
 │   ├── downloader.py
 │   ├── parser.py
 │   └── extractor.py
 ├── tests/
+├── .env
+├── .env.example
+├── .gitignore
 ├── requirements.txt
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
 ## Requirements
 
 - Python 3.10 or newer
 - pip
+- An API key from [Metals.Dev](https://metals.dev/) (required for API-based extraction)
 
 ## Installation
 
@@ -60,6 +68,27 @@ Gold&Currency-Price-Tracker/
    python -m pip install -r requirements.txt
    ```
 
+## Configuration
+
+API-based extraction requires an API key from [Metals.Dev](https://metals.dev/).
+
+1. Create a `.env` file in the project root directory.
+2. Add your API key:
+
+   ```env
+   API_KEY=your_api_key_here
+   ```
+
+3. The application uses `python-dotenv` to load the environment variable and `os.getenv()` to access the API key.
+
+**Security:** Never commit your `.env` file or expose your API key in a public repository. The `.env` file is excluded from Git using `.gitignore`.
+
+An optional `.env.example` file can be provided as a configuration template without including the actual API key:
+
+```env
+API_KEY=your_api_key_here
+```
+
 ## Usage
 
 Run the application from the project root:
@@ -68,60 +97,27 @@ Run the application from the project root:
 python src/main.py
 ```
 
+Choose one of the available extraction methods:
+
+```text
+1. Extract from HTML
+2. Extract from API
+Your choice:
+```
+
+### Method 1: Extract from HTML
+
+Enter `1` to extract the gold price directly from a website.
+
 When prompted, enter a website URL. For example:
 
 ```text
 https://goldprice.com/
 ```
 
-The application normalizes and validates the URL, sends an HTTP request, parses the returned HTML, and attempts to extract the gold price.
+The application normalizes and validates the URL, sends an HTTP request, parses the returned HTML, and attempts to extract the displayed gold price.
 
 Example output:
 
 ```text
--------------------- URL VALIDATION --------------------
-URL validation successful.
-
--------------------- HTTP REQUEST --------------------
-HTTP request successful.
-
--------------------- HTML PARSING --------------------
-HTML parsing successful.
-
--------------------- GOLD PRICE --------------------
-Gold price: $3,875.65
-```
-
-*The displayed price is an example. Actual prices and output may vary depending on the website response and current market conditions.*
-
-## Testing
-
-Run the test suite from the project root:
-
-```bash
-python -m pytest tests -v
-```
-
-Tests can be added for URL validation, URL normalization, HTTP request handling, HTML parsing, and gold price extraction.
-
-## Error Handling
-
-The application may report an error when:
-
-- The URL is invalid.
-- The website cannot be reached.
-- The request times out.
-- The server returns an unsuccessful HTTP status code.
-- The expected gold price element cannot be found in the HTML.
-
-Website structure changes may affect price extraction. The application depends on the HTML returned by the selected website.
-
-## Data Source
-
-The current target website is [GoldPrice.com](https://goldprice.com/).
-
-The extracted price is the value displayed by the website, not a guaranteed executable market quote. Availability and accuracy depend on the source website.
-
-## License
-
-No license has been specified yet.
+-------------------- URL VALIDATION ----------------
