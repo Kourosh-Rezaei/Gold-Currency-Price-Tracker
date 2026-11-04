@@ -5,6 +5,7 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
+api_key = os.getenv("API_KEY")
 
 url = "https://api.metals.dev/v1/latest"
 
@@ -35,8 +36,6 @@ def extract_with_api() -> float:
         If the API request fails or the server returns an unsuccessful
         HTTP status code.
     """
-
-    api_key = os.getenv("API_KEY")
 
     if not api_key:
         raise ValueError("API_KEY not found.")
