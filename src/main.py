@@ -71,7 +71,7 @@ def main():
         sys.exit(1)
 
     if price is not None:
-        print(f"Gold price: {price}")
+        print(f"Gold price: ${price:,.2f}")
     else:
         print("Gold price not found.")
 
