@@ -9,13 +9,9 @@ api_key = os.getenv("API_KEY")
 
 url = "https://api.metals.dev/v1/latest"
 
-params = {
-    "currency": "USD",
-    "unit": "toz"
-}
 
 
-def extract_with_api() -> float:
+def extract_with_api(metal: str, currency: str, unit: str) -> float:
     """
     Retrieve the latest gold price using the Metals.Dev API.
 
@@ -40,14 +36,27 @@ def extract_with_api() -> float:
     if not api_key:
         raise ValueError("API_KEY not found.")
 
+    params = {
+        "api_key": api_key,
+        "currency": currency,
+        "unit": unit,
+        }
+
     response = requests.get(
         url,
-        params={**params, "api_key": api_key},
-        timeout=10)
+        params= params,
+        timeout=10
+        )
+    
     response.raise_for_status()
 
     data = response.json()
 
-    gold_price = float(data["metals"]["gold"])
+    if data.get("status") != "success":
+        raise ValueError(f"API returns an unseccessful response: {data}")
 
-    return gold_price
+    price = float(data["metals"][metal])
+
+    return price
+
+
