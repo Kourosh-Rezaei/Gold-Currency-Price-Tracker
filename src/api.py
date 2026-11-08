@@ -13,24 +13,30 @@ url = "https://api.metals.dev/v1/latest"
 
 def extract_with_api(metal: str, currency: str, unit: str) -> float:
     """
-    Retrieve the latest gold price using the Metals.Dev API.
+    Retrieve the latest metal price using the Metals.dev API.
+
+    Parameters
+    ----------
+    metal : str
+        The metal name (gold, silver, platinum, or palladium).
+    currency : str
+        The desired currency (e.g., USD, EUR, GBP).
+    unit : str
+        The desired unit (e.g., toz, g, kg).
 
     Returns
     -------
     float
-        The latest gold price in USD per troy ounce.
+        The latest metal price.
 
     Raises
     ------
     ValueError
-        If the API key is missing or the response contains invalid JSON.
-
+        If the API key is missing.
     KeyError
         If the expected keys are missing from the API response.
-
     requests.exceptions.RequestException
-        If the API request fails or the server returns an unsuccessful
-        HTTP status code.
+        If the API request fails.
     """
 
     if not api_key:
