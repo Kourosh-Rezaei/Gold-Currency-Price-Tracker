@@ -210,30 +210,38 @@ async def select_currency(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return SELECT_UNIT
 
 
+
 async def select_unit(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Validate the selected unit and display the user's final selections."""
+
     unit = normalize_input(update.message.text)
 
-    if unit not in UNITS:
+    if context.user_data["category"] == "precious":
+        available_units = PRECIOUS_UNITS
+    else:
+        available_units = INDUSTRIAL_UNITS
+
+    if unit not in available_units:
         await update.message.reply_text(
             "Invalid unit❌ Please select or enter a valid unit."
         )
         return SELECT_UNIT
 
-    context.user_data["unit"] = UNITS[unit]
+    context.user_data["unit"] = available_units[unit]
 
     metal = context.user_data["metal"]
     currency = context.user_data["currency"]
     unit = context.user_data["unit"]
 
     await update.message.reply_text(
-    f"📋 Your selections:\n"
-    f"🔩 Metal: {metal}\n"
-    f"💱 Currency: {currency}\n"
-    f"📏 Unit: {unit}\n\n"
-    "All selections completed! ✅",
-    reply_markup=ReplyKeyboardRemove(),
-)
+        f"📋 Your selections:\n"
+        f"🔩 Metal: {metal}\n"
+        f"💱 Currency: {currency}\n"
+        f"📏 Unit: {unit}\n\n"
+        "All selections completed! ✅",
+        reply_markup=ReplyKeyboardRemove(),
+    )
+
     return ConversationHandler.END
 
 
