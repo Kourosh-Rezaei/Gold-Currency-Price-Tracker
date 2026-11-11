@@ -47,11 +47,20 @@ CURRENCIES = {
     "gbp": "GBP",
 }
 
-UNITS = {
+PRECIOUS_UNITS = {
     "toz": "toz",
     "g": "g",
     "gram": "g",
     "kg": "kg",
+}
+
+INDUSTRIAL_UNITS = {
+    "mt": "mt",
+    "metric ton": "mt",
+    "ton": "mt",
+    "kg": "kg",
+    "g": "g",
+    "gram": "g",
 }
 
 
