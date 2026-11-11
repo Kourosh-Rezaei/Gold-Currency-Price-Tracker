@@ -18,11 +18,27 @@ token = os.getenv("BOT_KEY")
 
 SELECT_CATEGORY, SELECT_METAL, SELECT_CURRENCY, SELECT_UNIT = range(4)
 
-METALS = {
+CATEGORIES = {
+    "precious metals": "precious",
+    "precious": "precious",
+    "industrial metals": "industrial",
+    "industrial": "industrial",
+}
+
+PRECIOUS_METALS = {
     "gold": "gold",
     "silver": "silver",
     "platinum": "platinum",
     "palladium": "palladium",
+}
+
+INDUSTRIAL_METALS = {
+    "copper": "copper",
+    "aluminum": "aluminum",
+    "aluminium": "aluminum",
+    "nickel": "nickel",
+    "lead": "lead",
+    "zinc": "zinc",
 }
 
 CURRENCIES = {
