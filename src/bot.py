@@ -70,13 +70,13 @@ def normalize_input(text: str) -> str:
     
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Start the conversation and display the metal selection keyboard."""
+    """Start the conversation and display the metal category keyboard."""
 
     context.user_data.clear()
 
     keyboard = [
-        ["Gold", "Silver"],
-        ["Platinum", "Palladium"],
+        ["Precious Metals"],
+        ["Industrial Metals"],
     ]
 
     reply_markup = ReplyKeyboardMarkup(
@@ -86,11 +86,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     await update.message.reply_text(
-        "Welcome!\nSelect a metal or type its name :",
+        "Welcome!\nSelect a metal category:",
         reply_markup=reply_markup,
     )
 
-    return SELECT_METAL
+    return SELECT_CATEGORY
 
 
 async def select_metal(update: Update, context: ContextTypes.DEFAULT_TYPE):
