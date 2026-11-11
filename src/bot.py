@@ -93,6 +93,50 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return SELECT_CATEGORY
 
 
+
+async def select_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Validate the selected category and display available metals."""
+
+    category = normalize_input(update.message.text)
+
+    if category not in CATEGORIES:
+        await update.message.reply_text(
+            "Invalid category❌ Please select a valid category."
+        )
+        return SELECT_CATEGORY
+
+    selected_category = CATEGORIES[category]
+
+    context.user_data["category"] = selected_category
+
+    if selected_category == "precious":
+        keyboard = [
+            ["Gold", "Silver"],
+            ["Platinum", "Palladium"],
+        ]
+
+    else:
+        keyboard = [
+            ["Copper", "Aluminum"],
+            ["Nickel", "Lead"],
+            ["Zinc"],
+        ]
+
+    reply_markup = ReplyKeyboardMarkup(
+        keyboard,
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+
+    await update.message.reply_text(
+        "Category selected successfully ✅\n\n"
+        "Select a metal or type its name:",
+        reply_markup=reply_markup,
+    )
+
+    return SELECT_METAL
+
+
 async def select_metal(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Validate the selected metal and ask the user to choose a currency."""
     metal = normalize_input(update.message.text)
