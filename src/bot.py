@@ -41,10 +41,12 @@ UNITS = {
 
 
 def normalize_input(text: str) -> str:
+    """Normalize user input by removing extra spaces and converting it to lowercase."""
     return text.strip().lower()
-
+    
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Start the conversation and display the metal selection keyboard."""
 
     context.user_data.clear()
 
@@ -68,7 +70,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def select_metal(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
+    """Validate the selected metal and ask the user to choose a currency."""
     metal = normalize_input(update.message.text)
 
     if metal not in METALS:
@@ -99,7 +101,7 @@ async def select_metal(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def select_currency(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
+    """Validate the selected currency and ask the user to choose a unit."""
     currency = normalize_input(update.message.text)
 
     if currency not in CURRENCIES:
@@ -130,7 +132,7 @@ async def select_currency(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def select_unit(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
+    """Validate the selected unit and display the user's final selections."""
     unit = normalize_input(update.message.text)
 
     if unit not in UNITS:
@@ -157,7 +159,7 @@ async def select_unit(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
+    """Cancel the conversation and clear the user's stored selections."""
     context.user_data.clear()
 
     await update.message.reply_text(
@@ -169,7 +171,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 def main():
-
+    """Configure and run the Telegram bot application."""
     if not token:
         raise RuntimeError("[ERROR] The Telegram bot token is not defined!")
 
