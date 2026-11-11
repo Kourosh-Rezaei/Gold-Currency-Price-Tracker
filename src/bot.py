@@ -275,23 +275,34 @@ def main():
     .get_updates_pool_timeout(30)
     .build()
     )
-
+ 
     conversation_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
         states={
+            SELECT_CATEGORY: [
+                MessageHandler(
+                    filters.TEXT & ~filters.COMMAND,
+                    select_category,)
+                    ],
             SELECT_METAL: [
-                MessageHandler(filters.TEXT & ~filters.COMMAND, select_metal)
-            ],
+                MessageHandler(
+                    filters.TEXT & ~filters.COMMAND,
+                    select_metal,)
+                    ],
             SELECT_CURRENCY: [
-                MessageHandler(filters.TEXT & ~filters.COMMAND, select_currency)
-            ],
+                MessageHandler(
+                    filters.TEXT & ~filters.COMMAND,
+                    select_currency,)
+                    ],
             SELECT_UNIT: [
-                MessageHandler(filters.TEXT & ~filters.COMMAND, select_unit)
-            ],
+                MessageHandler(
+                    filters.TEXT & ~filters.COMMAND,
+                    select_unit,)
+                    ],
         },
         fallbacks=[CommandHandler("cancel", cancel)],
         allow_reentry=True,
-    )
+        )
 
     application.add_handler(conversation_handler)
 
