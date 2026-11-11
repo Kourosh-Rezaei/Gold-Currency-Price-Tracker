@@ -15,6 +15,11 @@ load_dotenv()
 
 token = os.getenv("BOT_KEY")
 
+import asyncio
+
+from requests.exceptions import RequestException
+
+from api import extract_with_api
 
 SELECT_CATEGORY, SELECT_METAL, SELECT_CURRENCY, SELECT_UNIT = range(4)
 
@@ -233,15 +238,29 @@ async def select_unit(update: Update, context: ContextTypes.DEFAULT_TYPE):
     currency = context.user_data["currency"]
     unit = context.user_data["unit"]
 
+    try:
+        price = await asyncio.to_thread(
+            extract_with_api,
+            metal,
+            currency,
+            unit,
+        )
+
+    except (ValueError, KeyError, RequestException) as error:
+        await update.message.reply_text(
+            f"Could not retrieve the price: {error}"
+        )
+        return ConversationHandler.END
+    
     await update.message.reply_text(
         f"📋 Your selections:\n"
         f"🔩 Metal: {metal}\n"
         f"💱 Currency: {currency}\n"
         f"📏 Unit: {unit}\n\n"
+        f"💰 Latest price: {price:,.2f} {currency}\n\n"
         "All selections completed! ✅",
         reply_markup=ReplyKeyboardRemove(),
     )
-
     return ConversationHandler.END
 
 
