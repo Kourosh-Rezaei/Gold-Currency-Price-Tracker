@@ -179,6 +179,7 @@ async def select_metal(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def select_currency(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Validate the selected currency and ask the user to choose a unit."""
+
     currency = normalize_input(update.message.text)
 
     if currency not in CURRENCIES:
@@ -189,9 +190,10 @@ async def select_currency(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     context.user_data["currency"] = CURRENCIES[currency]
 
-    keyboard = [
-        ["toz", "g", "kg"],
-    ]
+    if context.user_data["category"] == "precious":
+        keyboard = [["toz", "g", "kg"]]
+    else:
+        keyboard = [["mt", "kg", "g"]]
 
     reply_markup = ReplyKeyboardMarkup(
         keyboard,
