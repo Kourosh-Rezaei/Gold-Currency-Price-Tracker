@@ -174,9 +174,17 @@ def main():
         raise RuntimeError("[ERROR] The Telegram bot token is not defined!")
 
     application = (
-        Application.builder()
-        .token(token)
-        .build()
+    Application.builder()
+    .token(token)
+    .connect_timeout(30)
+    .read_timeout(30)
+    .write_timeout(30)
+    .pool_timeout(30)
+    .get_updates_connect_timeout(30)
+    .get_updates_read_timeout(40)
+    .get_updates_write_timeout(30)
+    .get_updates_pool_timeout(30)
+    .build()
     )
 
     conversation_handler = ConversationHandler(
