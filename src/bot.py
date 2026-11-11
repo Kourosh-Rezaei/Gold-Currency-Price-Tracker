@@ -16,8 +16,7 @@ load_dotenv()
 token = os.getenv("BOT_KEY")
 
 
-SELECT_METAL, SELECT_CURRENCY, SELECT_UNIT = range(3)
-
+SELECT_CATEGORY, SELECT_METAL, SELECT_CURRENCY, SELECT_UNIT = range(4)
 
 METALS = {
     "gold": "gold",
