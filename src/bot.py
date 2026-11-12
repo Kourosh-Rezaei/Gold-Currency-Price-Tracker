@@ -50,6 +50,22 @@ CURRENCIES = {
     "usd": "USD",
     "eur": "EUR",
     "gbp": "GBP",
+    "irr": "IRR",
+    "chf": "CHF",
+    "jpy": "JPY",
+    "cny": "CNY",
+    "cad": "CAD",
+    "aud": "AUD",
+    "aed": "AED",
+    "sar": "SAR",
+    "try": "TRY",
+    "inr": "INR",
+    "hkd": "HKD",
+    "sgd": "SGD",
+    "krw": "KRW",
+    "rub": "RUB",
+    "brl": "BRL",
+    "mxn": "MXN",
 }
 
 PRECIOUS_UNITS = {
@@ -77,6 +93,8 @@ def normalize_input(text: str) -> str:
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Start the conversation and display the metal category keyboard."""
 
+    print("[INFO] /start command selected.")
+    
     context.user_data.clear()
 
     keyboard = [
@@ -104,10 +122,14 @@ async def select_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     category = normalize_input(update.message.text)
 
+    print(f"[INFO] Selected category: {category}")
+
     if category not in CATEGORIES:
         await update.message.reply_text(
             "Invalid category❌ Please select a valid category."
         )
+        print(f"[ERROR] Invalid category: {category}")
+        
         return SELECT_CATEGORY
 
     selected_category = CATEGORIES[category]
@@ -148,6 +170,8 @@ async def select_metal(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     metal = normalize_input(update.message.text)
 
+    print(f"[INFO] Selected metal: {metal}")
+
     category = context.user_data["category"]
 
     if category == "precious":
@@ -159,12 +183,18 @@ async def select_metal(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "Invalid metal❌ Please select or enter a valid metal name."
         )
+
+        print(f"[ERROR] Invalid metal: {metal}")
+
         return SELECT_METAL
 
     context.user_data["metal"] = available_metals[metal]
 
+    currencies = list(CURRENCIES.values())
+
     keyboard = [
-        ["USD", "EUR", "GBP"],
+        currencies[i:i + 3]
+        for i in range(0, len(currencies), 3)
     ]
 
     reply_markup = ReplyKeyboardMarkup(
@@ -187,10 +217,15 @@ async def select_currency(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     currency = normalize_input(update.message.text)
 
+    print(f"[INFO] Selected currency: {currency}")
+
     if currency not in CURRENCIES:
         await update.message.reply_text(
             "Invalid currency❌ Please select or enter a valid currency."
         )
+
+        print(f"[ERROR] Invalid currency: {currency}")
+
         return SELECT_CURRENCY
 
     context.user_data["currency"] = CURRENCIES[currency]
@@ -221,6 +256,8 @@ async def select_unit(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     unit = normalize_input(update.message.text)
 
+    print(f"[INFO] Selected unit: {unit}")
+
     if context.user_data["category"] == "precious":
         available_units = PRECIOUS_UNITS
     else:
@@ -230,6 +267,9 @@ async def select_unit(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "Invalid unit❌ Please select or enter a valid unit."
         )
+
+        print(f"[ERROR] Invalid unit: {unit}")
+
         return SELECT_UNIT
 
     context.user_data["unit"] = available_units[unit]
@@ -261,11 +301,17 @@ async def select_unit(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "All selections completed! ✅",
         reply_markup=ReplyKeyboardRemove(),
     )
+
+    print("[INFO] Price is sent to the user.")
+
     return ConversationHandler.END
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Cancel the conversation and clear the user's stored selections."""
+
+    print("[INFO] /cancel command selected.")
+
     context.user_data.clear()
 
     await update.message.reply_text(
@@ -294,7 +340,7 @@ def main():
     .get_updates_pool_timeout(30)
     .build()
     )
- 
+    print("[INFO] Bot is starting.")
     conversation_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
         states={
